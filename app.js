@@ -1,0 +1,85 @@
+const board = document.querySelector("#board");
+const tabs = document.querySelector("#tabs");
+const itemForm = document.querySelector("#item-form");
+const itemName = document.querySelector("#item-name");
+const saveStatus = document.querySelector("#save-status");
+let state = null;
+let draggedItemId = null;
+let saveTimer = null;
+
+const ALBUM_ORDER = ["Harry Styles", "Fine Line", "Harry's House", "Kiss All the Time. Disco, Occasionally.", "Spotify Singles", "Unreleased"];
+const ALBUM_COVERS = {
+  "Harry Styles": "https://i.ido.bi/assets/review/2017/05/Harry.jpg",
+  "Fine Line": "https://cdn11.bigcommerce.com/s-oep27gfop7/images/stencil/1280x1280/products/4764/108481/harry-styles-fine-line-2lp-a__50509.1750042401.jpg?c=1",
+  "Harry's House": "https://my-vinyl.com/3694-large_default/harrys-house.jpg",
+  "Kiss All the Time. Disco, Occasionally.": "https://cdn.shoplightspeed.com/shops/634895/files/74052809/1600x2048x2/harry-styles-kiss-all-the-time-disco-occasionally.jpg",
+};
+const makeId = (prefix) => `${prefix}-${crypto.randomUUID()}`;
+function defaultTiers() { return ["S", "A", "B", "C", "D", "F"].map((label, index) => ({ id: makeId("tier"), label, color: ["#ff7f7f", "#ffbf7f", "#ffdf7f", "#ffff7f", "#bfff7f", "#7fbfff"][index], items: [] })); }
+function currentBoard() { return state.tabs.find((tab) => tab.id === state.activeTabId) || state.tabs[0]; }
+function setStatus(text, className = "") { saveStatus.textContent = text; saveStatus.className = `save-status ${className}`; }
+
+function renderTabs() {
+  tabs.replaceChildren();
+  state.tabs.forEach((tab) => {
+    const wrapper = document.createElement("div"); wrapper.className = `tab ${tab.id === state.activeTabId ? "active" : ""}`;
+    const select = document.createElement("button"); select.className = "tab-select"; select.textContent = tab.name; select.title = `${tab.name} öffnen`;
+    select.addEventListener("click", () => { state.activeTabId = tab.id; sortUnranked(); render(); queueSave(); });
+    const rename = document.createElement("button"); rename.className = "tab-action"; rename.textContent = "✎"; rename.title = "Tierliste umbenennen"; rename.addEventListener("click", (event) => { event.stopPropagation(); renameTab(tab); });
+    const remove = document.createElement("button"); remove.className = "tab-action"; remove.textContent = "×"; remove.title = "Tierliste löschen"; remove.disabled = state.tabs.length === 1; remove.addEventListener("click", (event) => { event.stopPropagation(); deleteTab(tab); });
+    wrapper.append(select, rename, remove); tabs.appendChild(wrapper);
+  });
+}
+
+function render() {
+  renderTabs();
+  const active = currentBoard(); board.replaceChildren();
+  active.tiers.forEach((tier, tierIndex) => board.appendChild(createTier(tier, tierIndex)));
+  const unranked = document.createElement("section"); unranked.className = "unranked";
+  const heading = document.createElement("div"); heading.className = "unranked-header"; heading.innerHTML = `<span>Nicht zugeordnet</span><span>${active.unranked.length} Element${active.unranked.length === 1 ? "" : "e"}</span>`;
+  const content = createDropZone("unranked", active.unranked); content.classList.add("unranked-content"); unranked.append(heading, content); board.appendChild(unranked);
+}
+
+function createTier(tier, tierIndex) {
+  const row = document.createElement("section"); row.className = "tier-row";
+  const labelWrap = document.createElement("div"); labelWrap.className = "tier-label-wrap";
+  const label = document.createElement("button"); label.className = "tier-label"; label.style.backgroundColor = tier.color; label.title = "Reihe umbenennen oder Farbe ändern"; label.textContent = tier.label; label.addEventListener("click", () => editTier(tier));
+  const content = createDropZone(tier.id, tier.items); const actions = document.createElement("div"); actions.className = "tier-actions"; const active = currentBoard();
+  actions.innerHTML = `<button class="icon-button move-up" title="Reihe nach oben" ${tierIndex === 0 ? "disabled" : ""}>↑</button><button class="icon-button move-down" title="Reihe nach unten" ${tierIndex === active.tiers.length - 1 ? "disabled" : ""}>↓</button><button class="icon-button delete-tier" title="Reihe löschen">×</button>`;
+  actions.querySelector(".move-up").addEventListener("click", () => moveTier(tierIndex, -1)); actions.querySelector(".move-down").addEventListener("click", () => moveTier(tierIndex, 1)); actions.querySelector(".delete-tier").addEventListener("click", () => deleteTier(tierIndex));
+  labelWrap.append(label, actions); row.append(labelWrap, content); return row;
+}
+function createDropZone(location, itemIds) { const zone = document.createElement("div"); zone.className = "tier-content"; zone.dataset.location = location; if (!itemIds.length) zone.innerHTML = `<div class="empty-message">Elemente hier ablegen</div>`; itemIds.forEach((id) => { if (state.items[id]) zone.appendChild(createItem(state.items[id])); }); zone.addEventListener("dragover", (event) => { event.preventDefault(); zone.classList.add("drag-over"); }); zone.addEventListener("dragleave", () => zone.classList.remove("drag-over")); zone.addEventListener("drop", (event) => { event.preventDefault(); zone.classList.remove("drag-over"); if (draggedItemId) moveItem(draggedItemId, location, findInsertIndex(zone, event.clientX, event.clientY)); }); return zone; }
+function createItem(item) { const card = document.createElement("article"); card.className = "item-card"; card.draggable = true; card.dataset.itemId = item.id; const artwork = item.art || ALBUM_COVERS[item.album]; card.style.backgroundColor = item.color || "#29292e"; if (artwork) card.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, .34), rgba(0, 0, 0, .34)), url("${artwork}")`; card.style.backgroundSize = "cover"; card.style.backgroundPosition = "center"; card.title = item.album ? `${item.text} — ${item.album}` : item.text; card.innerHTML = `<span class="item-name">${escapeHtml(item.text)}</span><button class="item-delete" title="Delete item" aria-label="Delete ${escapeHtml(item.text)}">×</button>`; card.addEventListener("dragstart", () => { draggedItemId = item.id; card.classList.add("dragging"); }); card.addEventListener("dragend", () => { draggedItemId = null; card.classList.remove("dragging"); }); card.addEventListener("dblclick", () => editItem(item)); card.querySelector(".item-delete").addEventListener("click", (event) => { event.stopPropagation(); deleteItem(item.id); }); return card; }
+function findInsertIndex(zone, x, y) { const cards = [...zone.querySelectorAll(".item-card")].filter((card) => card.dataset.itemId !== draggedItemId); const after = cards.findIndex((card) => { const box = card.getBoundingClientRect(); return y < box.top + box.height / 2 || (Math.abs(y - (box.top + box.height / 2)) < box.height / 2 && x < box.left + box.width / 2); }); return after === -1 ? cards.length : after; }
+function removeFromAllLocations(itemId, target = currentBoard()) { target.unranked = target.unranked.filter((id) => id !== itemId); target.tiers.forEach((tier) => { tier.items = tier.items.filter((id) => id !== itemId); }); }
+function moveItem(itemId, destination, insertIndex) { const active = currentBoard(); removeFromAllLocations(itemId, active); const list = destination === "unranked" ? active.unranked : active.tiers.find((tier) => tier.id === destination).items; list.splice(Math.max(0, Math.min(insertIndex, list.length)), 0, itemId); if (destination === "unranked") sortUnranked(); render(); queueSave(); }
+function queueSave() { setStatus("Wird gespeichert…"); clearTimeout(saveTimer); saveTimer = setTimeout(async () => { try { const response = await fetch("/api/state", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(state) }); if (!response.ok) throw new Error("Speichern fehlgeschlagen"); setStatus("Alle Änderungen gespeichert", "saved"); } catch (error) { setStatus("Änderungen konnten nicht gespeichert werden", "error"); console.error(error); } }, 120); }
+function editItem(item) { const text = prompt("Elementname:", item.text); if (text === null || !text.trim()) return; item.text = text.trim(); render(); queueSave(); }
+function deleteItem(itemId) { if (!confirm(`„${state.items[itemId].text}“ aus allen Tierlisten löschen?`)) return; delete state.items[itemId]; state.tabs.forEach((tab) => removeFromAllLocations(itemId, tab)); render(); queueSave(); }
+function editTier(tier) { const label = prompt("Name der Reihe:", tier.label); if (label === null || !label.trim()) return; const color = prompt("Reihenfarbe (Hex, RGB oder Farbname):", tier.color); if (color === null) return; tier.label = label.trim(); tier.color = color.trim() || tier.color; render(); queueSave(); }
+function moveTier(index, direction) { const active = currentBoard(); const target = index + direction; if (target < 0 || target >= active.tiers.length) return; [active.tiers[index], active.tiers[target]] = [active.tiers[target], active.tiers[index]]; render(); queueSave(); }
+function deleteTier(index) { const active = currentBoard(); const tier = active.tiers[index]; if (!confirm(`Reihe „${tier.label}“ löschen und ihre Elemente zu „Nicht zugeordnet“ verschieben?`)) return; active.unranked.push(...tier.items); active.tiers.splice(index, 1); sortUnranked(); render(); queueSave(); }
+function renameTab(tab) { const name = prompt("Name der Tierliste:", tab.name); if (name === null || !name.trim()) return; tab.name = name.trim(); render(); queueSave(); }
+function deleteTab(tab) { if (state.tabs.length === 1 || !confirm(`Tierliste „${tab.name}“ löschen?`)) return; const index = state.tabs.indexOf(tab); state.tabs.splice(index, 1); if (state.activeTabId === tab.id) state.activeTabId = state.tabs[Math.max(0, index - 1)].id; render(); queueSave(); }
+function escapeHtml(value) { return value.replace(/[&<>'"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[character])); }
+
+itemForm.addEventListener("submit", (event) => { event.preventDefault(); const text = itemName.value.trim(); if (!text) return; const id = makeId("item"); state.items[id] = { id, text }; state.tabs.forEach((tab) => tab.unranked.push(id)); sortAllUnranked(); itemName.value = ""; render(); queueSave(); itemName.focus(); });
+document.querySelector("#add-tier").addEventListener("click", () => { const label = prompt("Name der neuen Reihe:", "Neue Reihe"); if (!label || !label.trim()) return; const color = prompt("Reihenfarbe:", "#d6bfff") || "#d6bfff"; currentBoard().tiers.push({ id: makeId("tier"), label: label.trim(), color: color.trim(), items: [] }); render(); queueSave(); });
+document.querySelector("#add-tab").addEventListener("click", () => { const name = prompt("Name der neuen Tierliste:", `Tierliste ${state.tabs.length + 1}`); if (!name || !name.trim()) return; const tab = { id: makeId("tab"), name: name.trim(), tiers: defaultTiers(), unranked: Object.keys(state.items) }; state.tabs.push(tab); state.activeTabId = tab.id; sortUnranked(); render(); queueSave(); });
+function cycleTab(direction) { const index = state.tabs.findIndex((tab) => tab.id === state.activeTabId); state.activeTabId = state.tabs[(index + direction + state.tabs.length) % state.tabs.length].id; sortUnranked(); render(); queueSave(); }
+document.querySelector("#previous-tab").addEventListener("click", () => cycleTab(-1));
+document.querySelector("#next-tab").addEventListener("click", () => cycleTab(1));
+document.addEventListener("keydown", (event) => { if (event.ctrlKey && (event.key === "ArrowLeft" || event.key === "ArrowRight")) { event.preventDefault(); cycleTab(event.key === "ArrowRight" ? 1 : -1); } });
+document.querySelector("#export-png").addEventListener("click", exportPng);
+function exportPng() { const active = currentBoard(), width = 1400, sidePadding = 36, rowWidth = width - sidePadding * 2, labelWidth = 130, itemWidth = 100, itemHeight = 100, itemGap = 8, rowHeight = 116, rowGap = 10; const unrankedRows = Math.max(1, Math.ceil(active.unranked.length / 6)); const unrankedHeight = 70 + unrankedRows * (itemHeight + itemGap) + 20; const height = 128 + active.tiers.length * (rowHeight + rowGap) + 24 + unrankedHeight + 36; const svgRows = active.tiers.map((tier, index) => exportRow(tier, sidePadding, 112 + index * (rowHeight + rowGap), rowWidth, labelWidth, itemWidth, itemHeight, itemGap, rowHeight)).join(""); const unrankedY = 112 + active.tiers.length * (rowHeight + rowGap) + 12; const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}"><rect width="100%" height="100%" fill="#111113"/><text x="${sidePadding}" y="48" fill="#fff" font-family="Arial" font-size="28" font-weight="700">${svgEscape(active.name)}</text><text x="${sidePadding}" y="78" fill="#a0a0aa" font-family="Arial" font-size="15">Exported from your local tierlist</text>${svgRows}<rect x="${sidePadding}" y="${unrankedY}" width="${rowWidth}" height="${unrankedHeight}" rx="4" fill="#111113" stroke="#3a3a40" stroke-width="2"/><text x="${sidePadding + 18}" y="${unrankedY + 28}" fill="#f7f7f9" font-family="Arial" font-size="17" font-weight="700">Unranked items</text>${exportItems(active.unranked, sidePadding + 18, unrankedY + 40, rowWidth - 36, itemWidth, itemHeight, itemGap, 6)}</svg>`; const image = new Image(); image.onload = () => { const canvas = document.createElement("canvas"); canvas.width = width * 2; canvas.height = height * 2; const context = canvas.getContext("2d"); context.scale(2, 2); context.drawImage(image, 0, 0, width, height); canvas.toBlob((blob) => { if (!blob) return; const link = document.createElement("a"); link.download = `${active.name.replace(/[^a-z0-9]+/gi, "-").toLowerCase() || "tierlist"}.png`; link.href = URL.createObjectURL(blob); link.click(); URL.revokeObjectURL(link.href); setStatus("PNG exported", "saved"); }, "image/png"); }; image.onerror = () => setStatus("Could not export PNG", "error"); image.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`; }
+function exportRow(tier, x, y, width, labelWidth, itemWidth, itemHeight, itemGap, rowHeight) { return `<rect x="${x}" y="${y}" width="${width}" height="${rowHeight}" rx="3" fill="#080809" stroke="#080809" stroke-width="3"/><rect x="${x}" y="${y}" width="${labelWidth}" height="${rowHeight}" fill="${svgEscape(tier.color)}"/><text x="${x + labelWidth / 2}" y="${y + rowHeight / 2 + 12}" text-anchor="middle" fill="#171719" font-family="Arial" font-size="32" font-weight="900">${svgEscape(tier.label)}</text>${exportItems(tier.items, x + labelWidth + 10, y + 8, width - labelWidth - 20, itemWidth, itemHeight, itemGap, Math.max(1, Math.floor((width - labelWidth - 20 + itemGap) / (itemWidth + itemGap))))}`; }
+function exportItems(itemIds, x, y, availableWidth, itemWidth, itemHeight, itemGap, columns) { return itemIds.map((itemId, index) => { const item = state.items[itemId]; if (!item) return ""; const column = index % columns, row = Math.floor(index / columns), itemX = x + column * (itemWidth + itemGap), itemY = y + row * (itemHeight + itemGap); return `<rect x="${itemX}" y="${itemY}" width="${itemWidth}" height="${itemHeight}" rx="3" fill="${svgEscape(item.color || "#29292e")}" stroke="#fff" stroke-opacity=".28"/><text x="${itemX + 12}" y="${itemY + 34}" fill="#fff" font-family="Arial" font-size="16" font-weight="700">${svgEscape(truncate(item.text, 19))}</text>`; }).join(""); }
+function truncate(text, maxLength) { return text.length > maxLength ? `${text.slice(0, maxLength - 1)}…` : text; }
+function svgEscape(value) { return String(value).replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&apos;" }[character])); }
+function albumIndex(itemId) { const index = ALBUM_ORDER.indexOf(state.items[itemId]?.album || ""); return index === -1 ? ALBUM_ORDER.length : index; }
+function sortUnranked(target = currentBoard()) { target.unranked.sort((first, second) => { const albumDifference = albumIndex(first) - albumIndex(second); return albumDifference || state.items[first].text.localeCompare(state.items[second].text); }); }
+function sortAllUnranked() { state.tabs.forEach((tab) => sortUnranked(tab)); }
+document.querySelector("#reset-board").addEventListener("click", () => { if (!confirm("Aktive Tierliste zurücksetzen und alle Elemente aus den Reihen entfernen?")) return; const active = currentBoard(); active.tiers = defaultTiers(); active.unranked = Object.keys(state.items); sortUnranked(); render(); queueSave(); });
+async function start() { try { const response = await fetch("/api/state"); if (!response.ok) throw new Error("Tierliste konnte nicht geladen werden"); state = await response.json(); sortAllUnranked(); render(); setStatus("Alle Änderungen gespeichert", "saved"); } catch (error) { setStatus("Tierliste konnte nicht geladen werden", "error"); board.innerHTML = `<div class="empty-message">Die Tierliste konnte nicht geladen werden. Läuft der Python-Server?</div>`; console.error(error); } }
+start();

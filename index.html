@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tierliste</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">PERSÖNLICHE TIERLISTE</p>
+        <h1>Ordne deine Favoriten</h1>
+        <p class="subtitle">Ziehe ein Element in eine beliebige Reihe. Änderungen werden automatisch in <code>tierlist.json</code> gespeichert.</p>
+      </div>
+      <div class="save-status" id="save-status" aria-live="polite">Wird geladen…</div>
+    </header>
+
+    <section class="toolbar" aria-label="Tierlisten-Werkzeuge">
+      <form id="item-form" class="add-item-form">
+        <label class="sr-only" for="item-name">Neues Element</label>
+        <input id="item-name" name="item" maxlength="80" placeholder="Element hinzufügen…" autocomplete="off" required>
+        <button type="submit" class="primary-button">Element hinzufügen</button>
+      </form>
+      <button type="button" class="secondary-button" id="export-png">PNG exportieren</button>
+      <button type="button" class="secondary-button" id="add-tier">+ Reihe hinzufügen</button>
+      <button type="button" class="secondary-button" id="reset-board">Tierliste zurücksetzen</button>
+    </section>
+
+    <nav class="tabs-bar" aria-label="Tierlisten">
+      <button type="button" class="secondary-button cycle-button" id="previous-tab" title="Strg + Linkspfeil">←</button>
+      <div id="tabs" class="tabs"></div>
+      <button type="button" class="secondary-button" id="add-tab">+ Neue Tierliste</button>
+      <button type="button" class="secondary-button cycle-button" id="next-tab" title="Strg + Rechtspfeil">→</button>
+    </nav>
+
+    <section id="board" class="board" aria-label="Tierlisten-Board"></section>
+    <p class="hint">Tipp: Klicke auf ein Reihenlabel, um Name und Farbe zu ändern. Mit den Pfeilen kannst du Reihen verschieben. Wechsle mit <kbd>Strg</kbd> + <kbd>←</kbd>/<kbd>→</kbd> zwischen Tierlisten.</p>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>
