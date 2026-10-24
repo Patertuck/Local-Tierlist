@@ -206,279 +206,333 @@
     "song-01": {
       "id": "song-01",
       "text": "Carolina",
-      "album": "Harry Styles"
+      "album": "Harry Styles",
+      "link": "spotify:track:3Dwq1oiOFys6Sxr5SslmXw"
     },
     "song-02": {
       "id": "song-02",
       "text": "Two Ghosts",
-      "album": "Harry Styles"
+      "album": "Harry Styles",
+      "link": "spotify:track:4B1rpPmQXwj78wk6aIGwwU"
     },
     "song-03": {
       "id": "song-03",
       "text": "Sweet Creature",
-      "album": "Harry Styles"
+      "album": "Harry Styles",
+      "link": "spotify:track:5kRPPEWFJIMox5qIkQkiz5"
     },
     "song-04": {
       "id": "song-04",
       "text": "Only Angel",
-      "album": "Harry Styles"
+      "album": "Harry Styles",
+      "link": "spotify:track:5Lbsc65org0b85kNsPkluY"
     },
     "song-05": {
       "id": "song-05",
       "text": "Kiwi",
-      "album": "Harry Styles"
+      "album": "Harry Styles",
+      "link": "spotify:track:33SNO8AaciGbNaQFkxvPrW"
     },
     "song-06": {
       "id": "song-06",
       "text": "Ever Since New York",
-      "album": "Harry Styles"
+      "album": "Harry Styles",
+      "link": "spotify:track:5LABCxgmP7DATATIJXOh6n"
     },
     "song-07": {
       "id": "song-07",
       "text": "Woman",
-      "album": "Harry Styles"
+      "album": "Harry Styles",
+      "link": "spotify:track:33bURv895AN4FkBvgFo2dx"
     },
     "song-08": {
       "id": "song-08",
       "text": "From the Dining Table",
-      "album": "Harry Styles"
+      "album": "Harry Styles",
+      "link": "spotify:track:1IF5UcqRO42D12vYwceOY6"
     },
     "song-09": {
       "id": "song-09",
       "text": "Meet Me in the Hallway",
-      "album": "Harry Styles"
+      "album": "Harry Styles",
+      "link": "spotify:track:4u9Y4Z9i9VaAbBK7rW1Rha"
     },
     "song-10": {
       "id": "song-10",
       "text": "Sign of the Times",
-      "album": "Harry Styles"
+      "album": "Harry Styles",
+      "link": "spotify:track:5Ohxk2dO5COHF1krpoPigN"
     },
     "song-11": {
       "id": "song-11",
       "text": "Golden",
-      "album": "Fine Line"
+      "album": "Fine Line",
+      "link": "spotify:track:45S5WTQEGOB1VHr1Q4FuPl"
     },
     "song-12": {
       "id": "song-12",
       "text": "Watermelon Sugar",
-      "album": "Fine Line"
+      "album": "Fine Line",
+      "link": "spotify:track:6UelLqGlWMcVH1E5c4H7lY"
     },
     "song-13": {
       "id": "song-13",
       "text": "Adore You",
-      "album": "Fine Line"
+      "album": "Fine Line",
+      "link": "spotify:track:3jjujdWJ72nww5eGnfs2E7"
     },
     "song-14": {
       "id": "song-14",
       "text": "Lights Up",
-      "album": "Fine Line"
+      "album": "Fine Line",
+      "link": "spotify:track:2plLJpUcYPFrl1sW2pMG63"
     },
     "song-15": {
       "id": "song-15",
       "text": "Cherry",
-      "album": "Fine Line"
+      "album": "Fine Line",
+      "link": "spotify:track:2IOFZdYYkFxEHVz1w34PoL"
     },
     "song-16": {
       "id": "song-16",
       "text": "Falling",
-      "album": "Fine Line"
+      "album": "Fine Line",
+      "link": "spotify:track:1ZMiCix7XSAbfAJlEZWMCp"
     },
     "song-17": {
       "id": "song-17",
       "text": "To Be So Lonely",
-      "album": "Fine Line"
+      "album": "Fine Line",
+      "link": "spotify:track:5JiH89mHrv9oWHlD0T326z"
     },
     "song-18": {
       "id": "song-18",
       "text": "She",
-      "album": "Fine Line"
+      "album": "Fine Line",
+      "link": "spotify:track:6SQLk9HSNketfgs2AyIiMs"
     },
     "song-19": {
       "id": "song-19",
       "text": "Sunflower, Vol. 6",
-      "album": "Fine Line"
+      "album": "Fine Line",
+      "link": "spotify:track:6iYMfxznTBlcVOgRHab2W0"
     },
     "song-20": {
       "id": "song-20",
       "text": "Canyon Moon",
-      "album": "Fine Line"
+      "album": "Fine Line",
+      "link": "spotify:track:5IhzJOXNE7ki0IIJbZbnGq"
     },
     "song-21": {
       "id": "song-21",
       "text": "Treat People with Kindness",
-      "album": "Fine Line"
+      "album": "Fine Line",
+      "link": "spotify:track:03mMSLEJCPoGJwQhHpN5y0"
     },
     "song-22": {
       "id": "song-22",
       "text": "Fine Line",
-      "album": "Fine Line"
+      "album": "Fine Line",
+      "link": "spotify:track:6VzcQuzTNTMFnJ6rBSaLH9"
     },
     "song-23": {
       "id": "song-23",
       "text": "Music for a Sushi Restaurant",
-      "album": "Harry's House"
+      "album": "Harry's House",
+      "link": "spotify:track:4VqPOruhp5EdPBeR92t6lQ"
     },
     "song-24": {
       "id": "song-24",
       "text": "Late Night Talking",
-      "album": "Harry's House"
+      "album": "Harry's House",
+      "link": "spotify:track:1qEmFfgcLObUfQm0j1W2CK"
     },
     "song-25": {
       "id": "song-25",
       "text": "Grapejuice",
-      "album": "Harry's House"
+      "album": "Harry's House",
+      "link": "spotify:track:4j6kId9QIqhoXvqHKgSKa0"
     },
     "song-26": {
       "id": "song-26",
       "text": "As It Was",
-      "album": "Harry's House"
+      "album": "Harry's House",
+      "link": "spotify:track:4LRPiXqCikLlN15c3yImP"
     },
     "song-27": {
       "id": "song-27",
       "text": "Daylight",
-      "album": "Harry's House"
+      "album": "Harry's House",
+      "link": "spotify:track:51Zw1cKDgkad0CXv23HCMU"
     },
     "song-28": {
       "id": "song-28",
       "text": "Little Freak",
-      "album": "Harry's House"
+      "album": "Harry's House",
+      "link": "spotify:track:1qMMYpVatbRITKCfq1gasi"
     },
     "song-29": {
       "id": "song-29",
       "text": "Matilda",
-      "album": "Harry's House"
+      "album": "Harry's House",
+      "link": "spotify:track:6uvh0In7u1Xn4HgxOfAn8O"
     },
     "song-30": {
       "id": "song-30",
       "text": "Cinema",
-      "album": "Harry's House"
+      "album": "Harry's House",
+      "link": "spotify:track:35TyJIMR3xRouUuo2sjS6v"
     },
     "song-31": {
       "id": "song-31",
       "text": "Daydreaming",
-      "album": "Harry's House"
+      "album": "Harry's House",
+      "link": "spotify:track:69w5X6uTrOaWM32IetSzvO"
     },
     "song-32": {
       "id": "song-32",
       "text": "Keep Driving",
-      "album": "Harry's House"
+      "album": "Harry's House",
+      "link": "spotify:track:2NcQic8JxdjAlAHuNbOIRE"
     },
     "song-33": {
       "id": "song-33",
       "text": "Satellite",
-      "album": "Harry's House"
+      "album": "Harry's House",
+      "link": "spotify:track:0rzaRSujxA0bKyjJl6vHYq"
     },
     "song-34": {
       "id": "song-34",
       "text": "Boyfriends",
-      "album": "Harry's House"
+      "album": "Harry's House",
+      "link": "spotify:track:6qj02zSeEJGWZ4c0dn5QzJ"
     },
     "song-35": {
       "id": "song-35",
       "text": "Love of My Life",
-      "album": "Harry's House"
+      "album": "Harry's House",
+      "link": "spotify:track:1mw0RgNXIpYRyyCdBQbLgA"
     },
     "song-36": {
       "id": "song-36",
       "text": "Trouble",
-      "album": "Kiss All the Time. Disco, Occasionally."
+      "album": "Kiss All the Time. Disco, Occasionally.",
+      "link": "spotify:search:Harry%20Styles%20Trouble"
     },
     "song-37": {
       "id": "song-37",
       "text": "Lay Down",
-      "album": "Kiss All the Time. Disco, Occasionally."
+      "album": "Kiss All the Time. Disco, Occasionally.",
+      "link": "spotify:search:Harry%20Styles%20Lay%20Down"
     },
     "song-38": {
       "id": "song-38",
       "text": "Are You Listening Yet?",
-      "album": "Kiss All the Time. Disco, Occasionally."
+      "album": "Kiss All the Time. Disco, Occasionally.",
+      "link": "spotify:track:7s7v5EoNLD6TwDu4Nw51Oy"
     },
     "song-39": {
       "id": "song-39",
       "text": "Aperture",
-      "album": "Kiss All the Time. Disco, Occasionally."
+      "album": "Kiss All the Time. Disco, Occasionally.",
+      "link": "spotify:track:45Z3m6yazmAi4jZuW0tzW0"
     },
     "song-40": {
       "id": "song-40",
       "text": "Dance No More",
-      "album": "Kiss All the Time. Disco, Occasionally."
+      "album": "Kiss All the Time. Disco, Occasionally.",
+      "link": "spotify:track:0VV0AMmgLBUhzuFedr3F3e"
     },
     "song-41": {
       "id": "song-41",
       "text": "American Girls",
-      "album": "Kiss All the Time. Disco, Occasionally."
+      "album": "Kiss All the Time. Disco, Occasionally.",
+      "link": "spotify:track:7gtG45ieyQzKtNKobfLd49"
     },
     "song-42": {
       "id": "song-42",
       "text": "Taste Back",
-      "album": "Kiss All the Time. Disco, Occasionally."
+      "album": "Kiss All the Time. Disco, Occasionally.",
+      "link": "spotify:track:3xClevycpBON8bkyxFbAna"
     },
     "song-43": {
       "id": "song-43",
       "text": "Coming Up Roses",
-      "album": "Kiss All the Time. Disco, Occasionally."
+      "album": "Kiss All the Time. Disco, Occasionally.",
+      "link": "spotify:track:0QPdjsMOUhwouq1NS3HwfQ"
     },
     "song-44": {
       "id": "song-44",
       "text": "Paint by Numbers",
-      "album": "Kiss All the Time. Disco, Occasionally."
+      "album": "Kiss All the Time. Disco, Occasionally.",
+      "link": "spotify:track:56k68P3bFQvnKw89hizJFZ"
     },
     "song-45": {
       "id": "song-45",
       "text": "Ready, Steady, Go!",
-      "album": "Kiss All the Time. Disco, Occasionally."
+      "album": "Kiss All the Time. Disco, Occasionally.",
+      "link": "spotify:track:0i4qKfuKJ3juUsEwnJAxk3"
     },
     "song-46": {
       "id": "song-46",
       "text": "The Waiting Game",
-      "album": "Kiss All the Time. Disco, Occasionally."
+      "album": "Kiss All the Time. Disco, Occasionally.",
+      "link": "spotify:track:0tV6LXuVzJR4yifqwQuNwN"
     },
     "song-47": {
       "id": "song-47",
       "text": "Pop",
-      "album": "Kiss All the Time. Disco, Occasionally."
+      "album": "Kiss All the Time. Disco, Occasionally.",
+      "link": "spotify:track:028i7HBfp8uE5epmx5ieMA"
     },
     "song-48": {
       "id": "song-48",
       "text": "Girl Crush",
       "album": "Spotify Singles",
-      "art": "https://i1.sndcdn.com/artworks-000250497136-n2qfo1-t1080x1080.jpg"
+      "art": "https://i1.sndcdn.com/artworks-000250497136-n2qfo1-t1080x1080.jpg",
+      "link": "spotify:track:4YutJsNwBBInE8vemufpQ8"
     },
     "song-49": {
       "id": "song-49",
       "text": "Medicine",
       "album": "Unreleased",
-      "art": "/assets/unreleased/medicine.png"
+      "art": "/assets/unreleased/medicine.png",
+      "link": "https://www.youtube.com/results?search_query=Harry+Styles+Medicine"
     },
     "song-50": {
       "id": "song-50",
       "text": "Anna",
       "album": "Unreleased",
-      "art": "/assets/unreleased/anna.png"
+      "art": "/assets/unreleased/anna.png",
+      "link": "https://www.youtube.com/results?search_query=Harry+Styles+Anna"
     },
     "song-51": {
       "id": "song-51",
       "text": "Complicated Freak",
       "album": "Unreleased",
-      "art": "/assets/unreleased/complicated-freak.png"
+      "art": "/assets/unreleased/complicated-freak.png",
+      "link": "https://www.youtube.com/results?search_query=Harry+Styles+Complicated+Freak"
     },
     "song-52": {
       "id": "song-52",
       "text": "Baby Honey",
       "album": "Unreleased",
-      "art": "/assets/unreleased/baby-honey.png"
+      "art": "/assets/unreleased/baby-honey.png",
+      "link": "https://www.youtube.com/results?search_query=Harry+Styles+Baby+Honey"
     },
     "song-53": {
       "id": "song-53",
       "text": "Already Home",
       "album": "Unreleased",
-      "art": "/assets/unreleased/already-home.png"
+      "art": "/assets/unreleased/already-home.png",
+      "link": "https://www.youtube.com/results?search_query=Harry+Styles+Already+Home"
     },
     "song-54": {
       "id": "song-54",
       "text": "Him",
       "album": "Unreleased",
-      "art": "/assets/unreleased/him.png"
+      "art": "/assets/unreleased/him.png",
+      "link": "https://www.youtube.com/results?search_query=Harry+Styles+Him"
     }
   }
 }

@@ -7,13 +7,66 @@ import tempfile
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import quote, quote_plus, urlparse
 
 
 ROOT = Path(__file__).resolve().parent
 STATE_FILE = ROOT / "tierlist.json"
 HOST = "127.0.0.1"
 PORT = 8000
+
+
+# Verified Spotify track IDs. Keeping these in the catalog source means a
+# Ctrl+click can open the exact track in the Spotify desktop app instead of
+# making Spotify search for the song title.
+SPOTIFY_TRACK_IDS = {
+    "Carolina": "3Dwq1oiOFys6Sxr5SslmXw",
+    "Meet Me in the Hallway": "4u9Y4Z9i9VaAbBK7rW1Rha",
+    "Two Ghosts": "4B1rpPmQXwj78wk6aIGwwU",
+    "Sweet Creature": "5kRPPEWFJIMox5qIkQkiz5",
+    "Only Angel": "5Lbsc65org0b85kNsPkluY",
+    "Kiwi": "33SNO8AaciGbNaQFkxvPrW",
+    "Ever Since New York": "5LABCxgmP7DATATIJXOh6n",
+    "Woman": "33bURv895AN4FkBvgFo2dx",
+    "From the Dining Table": "1IF5UcqRO42D12vYwceOY6",
+    "Sign of the Times": "5Ohxk2dO5COHF1krpoPigN",
+    "Golden": "45S5WTQEGOB1VHr1Q4FuPl",
+    "Watermelon Sugar": "6UelLqGlWMcVH1E5c4H7lY",
+    "Adore You": "3jjujdWJ72nww5eGnfs2E7",
+    "Lights Up": "2plLJpUcYPFrl1sW2pMG63",
+    "Cherry": "2IOFZdYYkFxEHVz1w34PoL",
+    "Falling": "1ZMiCix7XSAbfAJlEZWMCp",
+    "To Be So Lonely": "5JiH89mHrv9oWHlD0T326z",
+    "She": "6SQLk9HSNketfgs2AyIiMs",
+    "Sunflower, Vol. 6": "6iYMfxznTBlcVOgRHab2W0",
+    "Canyon Moon": "5IhzJOXNE7ki0IIJbZbnGq",
+    "Treat People with Kindness": "03mMSLEJCPoGJwQhHpN5y0",
+    "Fine Line": "6VzcQuzTNTMFnJ6rBSaLH9",
+    "Music for a Sushi Restaurant": "4VqPOruhp5EdPBeR92t6lQ",
+    "Late Night Talking": "1qEmFfgcLObUfQm0j1W2CK",
+    "Grapejuice": "4j6kId9QIqhoXvqHKgSKa0",
+    "As It Was": "4LRPiXqCikLlN15c3yImP",
+    "Daylight": "51Zw1cKDgkad0CXv23HCMU",
+    "Little Freak": "1qMMYpVatbRITKCfq1gasi",
+    "Matilda": "6uvh0In7u1Xn4HgxOfAn8O",
+    "Cinema": "35TyJIMR3xRouUuo2sjS6v",
+    "Daydreaming": "69w5X6uTrOaWM32IetSzvO",
+    "Keep Driving": "2NcQic8JxdjAlAHuNbOIRE",
+    "Satellite": "0rzaRSujxA0bKyjJl6vHYq",
+    "Love of My Life": "1mw0RgNXIpYRyyCdBQbLgA",
+    "Boyfriends": "6qj02zSeEJGWZ4c0dn5QzJ",
+    "Aperture": "45Z3m6yazmAi4jZuW0tzW0",
+    "American Girls": "7gtG45ieyQzKtNKobfLd49",
+    "Ready, Steady, Go!": "0i4qKfuKJ3juUsEwnJAxk3",
+    "Are You Listening Yet?": "7s7v5EoNLD6TwDu4Nw51Oy",
+    "Taste Back": "3xClevycpBON8bkyxFbAna",
+    "Girl Crush": "4YutJsNwBBInE8vemufpQ8",
+    "Dance No More": "0VV0AMmgLBUhzuFedr3F3e",
+    "Coming Up Roses": "0QPdjsMOUhwouq1NS3HwfQ",
+    "Paint by Numbers": "56k68P3bFQvnKw89hizJFZ",
+    "The Waiting Game": "0tV6LXuVzJR4yifqwQuNwN",
+    "Pop": "028i7HBfp8uE5epmx5ieMA",
+}
 
 
 def default_tiers() -> list[dict]:
@@ -67,7 +120,15 @@ def restored_catalog_state() -> dict:
     for index, entry in enumerate(catalog, start=1):
         text, album, *art = entry
         item_id = f"song-{index:02d}"
-        item = {"id": item_id, "text": text, "album": album}
+        search_text = f"Harry Styles {text}"
+        link = (
+            f"https://www.youtube.com/results?search_query={quote_plus(search_text)}"
+            if album == "Unreleased"
+            else f"spotify:track:{SPOTIFY_TRACK_IDS[text]}"
+            if text in SPOTIFY_TRACK_IDS
+            else f"spotify:search:{quote(search_text)}"
+        )
+        item = {"id": item_id, "text": text, "album": album, "link": link}
         if art:
             item["art"] = art[0]
         items[item_id] = item
@@ -76,6 +137,25 @@ def restored_catalog_state() -> dict:
     state["items"] = items
     state["tabs"][0]["unranked"] = unranked
     return state
+
+
+def ensure_item_links(state: dict) -> bool:
+    changed = False
+    for item in state.get("items", {}).values():
+        search_text = f"Harry Styles {item.get('text', '')}"
+        track_id = SPOTIFY_TRACK_IDS.get(item.get("text", ""))
+        expected_link = (
+            f"https://www.youtube.com/results?search_query={quote_plus(search_text)}"
+            if item.get("album") == "Unreleased"
+            else f"spotify:track:{track_id}"
+            if track_id
+            else f"spotify:search:{quote(search_text)}"
+        )
+        if item.get("link") == expected_link:
+            continue
+        item["link"] = expected_link
+        changed = True
+    return changed
 
 
 def migrate_state(state: dict) -> dict:
@@ -97,7 +177,8 @@ def load_state() -> dict:
             raw_state = json.load(file)
         state = migrate_state(raw_state)
         validate_state(state)
-        if state != raw_state:
+        links_added = ensure_item_links(state)
+        if state != raw_state or links_added:
             save_state(state)
         return state
     except (OSError, json.JSONDecodeError, ValueError, TypeError):
